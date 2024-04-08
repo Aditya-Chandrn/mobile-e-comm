@@ -1,85 +1,60 @@
 package com.asa.product;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 // spring boot imports
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-// mongo imports
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.springframework.data.mongodb.core.convert.MongoConverter;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import com.asa.product.response.ProductCreationResponse;
+import com.asa.product.response.ProductEditResponse;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
   @Autowired
-  private MongoClient client;
+  private ProductService productService;
 
-  @Autowired
-  private MongoConverter convertor;
-
-  @Autowired
-  private Environment environment;
-
-  /**************************************************
-   * Fetch products by applying filter
-   ***************************************************/
   @GetMapping("")
-  public ResponseEntity<List<Product>> filterProducts(
+  public ResponseEntity<List<Product>> getProducts(
       @RequestParam(required = false, defaultValue = "") String name,
       @RequestParam(required = false) String[] companies,
       @RequestParam(required = false) Float lowerPrice,
       @RequestParam(required = false) Float upperPrice) {
 
-    // get collection object
-    String databaseName = environment.getProperty("spring.data.mongodb.database");
-    MongoDatabase database = client.getDatabase(databaseName);
-    MongoCollection<Document> collection = database.getCollection("mobiles");
-
-    System.out.println("---------<><><><><><><><>--------");
-    if (lowerPrice == null)
-      lowerPrice = 0.0f;
-    if (upperPrice == null)
-      upperPrice = 99999999.9f;
-
-    // configure filters
-    String nameRegex = String.format("(?i).*%s.*", name);
-    Bson nameFilter = Filters.regex("name", nameRegex);
-    Bson priceFilter = Filters.and(Filters.gt("price", lowerPrice), Filters.lt("price", upperPrice));
-
-    Bson filter = Filters.and(nameFilter, priceFilter);
-
-    if (companies != null && companies.length > 0) {
-      // make case insensitive check for companies
-      List<Bson> companyFilters = new ArrayList<>();
-      for (String company : companies) {
-        companyFilters.add(Filters.regex("company", Pattern.compile(company, Pattern.CASE_INSENSITIVE)));
-      }
-      Bson finalCompanyFilter = Filters.or(companyFilters);
-      filter = Filters.and(filter, finalCompanyFilter);
-    }
-
-    // search based on filter and store in a list
-    List<Product> productList = new ArrayList<Product>();
-    FindIterable<Document> productDocs = collection.find(filter);
-
-    productDocs.forEach(product -> productList.add(convertor.read(Product.class, product)));
-
+    List<Product> productList = productService.filterProducts(name, companies, lowerPrice, upperPrice);
     return ResponseEntity.ok(productList);
   }
 
+  @PostMapping("/create")
+  public ResponseEntity<ProductCreationResponse> createProduct(@RequestBody Product product) {
+    String productId = productService.createProduct(product);
+    ProductCreationResponse response = new ProductCreationResponse("New product created successfully", productId);
+    return ResponseEntity.ok(response);
+  }
+
+  @PostMapping("/edit")
+  public ResponseEntity<ProductEditResponse> updateProduct(@RequestBody Product product) {
+    String productId = product.getProductId();
+    Product editedProduct = productService.editProduct(productId, product);
+    ProductEditResponse response = new ProductEditResponse("Product updated successfully", editedProduct);
+    return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/delete")
+  public ResponseEntity<String> deleteProduct(@RequestParam String productId) {
+    boolean result = productService.deleteProduct(productId);
+    if (result == true)
+      return ResponseEntity.ok(String.format("Product %s deleted successfully", productId));
+    else 
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting product "+ productId);
+  }
 }
