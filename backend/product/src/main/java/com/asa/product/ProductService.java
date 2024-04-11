@@ -1,7 +1,9 @@
 package com.asa.product;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 // spring boot imports
@@ -120,5 +122,20 @@ public class ProductService {
     } else {
       throw new NotFoundException("Product not found with ID: " + productId);
     }
+  }
+
+  /**************************************************
+   * Get Product Data
+   ***************************************************/
+  public Object getFieldData(String productId, String fieldName) throws NoSuchFieldException, IllegalAccessException{
+    Optional<Product> optionalProduct = repository.findById(productId);
+    if(!optionalProduct.isPresent()) return "Product doesn't exist";
+    Product product = optionalProduct.get();
+    System.out.println("----<><><><><><><><><>----");
+    System.out.println(product);
+    System.out.println(fieldName);
+    Field field = product.getClass().getDeclaredField(fieldName);
+    field.setAccessible(true);
+    return field.get(product);
   }
 }

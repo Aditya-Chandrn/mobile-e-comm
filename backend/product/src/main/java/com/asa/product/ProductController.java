@@ -54,7 +54,14 @@ public class ProductController {
     boolean result = productService.deleteProduct(productId);
     if (result == true)
       return ResponseEntity.ok(String.format("Product %s deleted successfully", productId));
-    else 
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting product "+ productId);
+    else
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting product " + productId);
+  }
+
+  @GetMapping("get-field")
+  public ResponseEntity<Object> getFieldData(@RequestParam String productId, @RequestParam String fieldName)
+      throws NoSuchFieldException, IllegalAccessException {
+    Object fieldValue = productService.getFieldData(productId, fieldName);
+    return ResponseEntity.ok(fieldValue);
   }
 }
