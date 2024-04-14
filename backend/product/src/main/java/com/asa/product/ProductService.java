@@ -79,6 +79,15 @@ public class ProductService {
   }
 
   /**************************************************
+   * Get Product Data
+   ***************************************************/
+  public Object getProduct(String productId){
+    Optional<Product> existingProduct = repository.findById(productId);
+    if(!existingProduct.isPresent()) return "ProductNotFound";
+    return existingProduct.get();
+  }
+
+  /**************************************************
    * Create Products
    ***************************************************/
   public String createProduct(Product product) {
@@ -99,8 +108,10 @@ public class ProductService {
       existingProduct.setName(updatedProductData.getName());
       existingProduct.setPrice(updatedProductData.getPrice());
       existingProduct.setImage(updatedProductData.getImage());
+      existingProduct.setSeller(updatedProductData.getSeller());
       existingProduct.setDescription(updatedProductData.getDescription());
       existingProduct.setFeatures(updatedProductData.getFeatures());
+      existingProduct.setQuantity(updatedProductData.getQuantity());
 
       // Save the modified product back to the database
       return repository.save(existingProduct);
@@ -125,15 +136,12 @@ public class ProductService {
   }
 
   /**************************************************
-   * Get Product Data
+   * Get Product Field Data
    ***************************************************/
   public Object getFieldData(String productId, String fieldName) throws NoSuchFieldException, IllegalAccessException{
     Optional<Product> optionalProduct = repository.findById(productId);
     if(!optionalProduct.isPresent()) return "Product doesn't exist";
     Product product = optionalProduct.get();
-    System.out.println("----<><><><><><><><><>----");
-    System.out.println(product);
-    System.out.println(fieldName);
     Field field = product.getClass().getDeclaredField(fieldName);
     field.setAccessible(true);
     return field.get(product);

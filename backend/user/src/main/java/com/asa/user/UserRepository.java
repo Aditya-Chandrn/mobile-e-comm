@@ -1,5 +1,7 @@
 package com.asa.user;
 
+import java.util.Optional;
+
 // import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -9,5 +11,5 @@ import com.asa.user.models.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String>{
-  User findByEmail(String email);
+  Optional<User> findByEmail(String email);
 }

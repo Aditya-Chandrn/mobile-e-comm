@@ -1,0 +1,16 @@
+.cart{
+  display: flex;
+  padding: 5vh 5vw;
+  justify-content: space-between;
+}
+
+.products{
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+  gap: 3vh;
+}
+
+.cost{
+  width: 20vw;
+}

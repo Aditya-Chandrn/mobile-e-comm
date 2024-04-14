@@ -3,6 +3,16 @@ spring:
     name: gateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - DELETE
+            - PATCH
       routes:
         - id: user
           uri: lb://USER
@@ -12,6 +22,10 @@ spring:
           uri: lb://PRODUCT
           predicates:
             - Path=/product/**
+        - id: order
+          uri: lb://ORDER
+          predicates:
+            - Path=/order/**
 
 server:
   port: 5000

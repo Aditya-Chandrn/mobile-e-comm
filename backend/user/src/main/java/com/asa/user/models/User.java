@@ -24,4 +24,5 @@ public class User {
   private String image = null;
   private String password;
   private List<Product> cart = new ArrayList<Product>();
+  private List<String> orders = new ArrayList<String>();
 }

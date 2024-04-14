@@ -34,6 +34,12 @@ public class ProductController {
     return ResponseEntity.ok(productList);
   }
 
+  @GetMapping("/get")
+  public ResponseEntity<Object> getProduct(@RequestParam String productId){
+    Object response = productService.getProduct(productId);
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping("/create")
   public ResponseEntity<ProductCreationResponse> createProduct(@RequestBody Product product) {
     String productId = productService.createProduct(product);

@@ -1,0 +1,17 @@
+.filter{
+  box-sizing: border-box;
+  width: 15vw;
+  padding: 5vh 2vw;
+  position: fixed;
+}
+
+.brands{
+  display: flex;
+  flex-direction: column;
+}
+
+.company{
+  width: inherit;
+  display: flex;
+  justify-content: space-between;
+}
