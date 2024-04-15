@@ -22,12 +22,15 @@ const Filter = ({
 
   return (
     <div className={styles["filter"]}>
+      <div className={styles["heading"]}>FILTERS</div>
       <input
+        className={styles["search"]}
         type="search"
         value={name}
         onChange={e => setName(e.target.value)}
         placeholder="Search..."
       />
+      <br/><br/>
       <div className={styles["filter-option"]}>
         <b>Brands</b>
         {companyList.map((company, index) =>
@@ -43,9 +46,11 @@ const Filter = ({
           </div>
         )}
       </div>
+      <br/>
       <div className={styles["filter-option"]}>
         <b>Lower Price</b>
         <input
+          className={styles["price"]}
           type="number"
           value={lowerPrice}
           onChange={e => setLowerPrice(e.target.value)}
@@ -54,12 +59,13 @@ const Filter = ({
       <div className={styles["filter-option"]}>
         <b>Upper Price</b>
         <input
+          className={styles["price"]}
           type="number"
           value={upperPrice}
           onChange={e => setUpperPrice(e.target.value)}
         />
       </div>
-      <button type="button" onClick={() => getProducts()}>Search</button>
+      <button className={styles["button"]} type="button" onClick={() => getProducts()}>Search</button>
     </div>
   );
 };
