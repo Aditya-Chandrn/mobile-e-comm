@@ -6,10 +6,7 @@ import Bill from "components/bill/Bill";
 import { getUser, storeUser } from "helperFunctions";
 
 const getProducts = async (user, setCart) => {
-  if(!user) {
-    window.location.href = "/account/login";
-  }
-  console.log(user);
+  if(!user) return;
   let newCart = [];
   await Promise.all(
     user.cart.map(async (cartItem) => {
