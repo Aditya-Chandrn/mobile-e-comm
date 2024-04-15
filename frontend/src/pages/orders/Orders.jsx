@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from "./orders.module.css";
 import { getUser } from 'helperFunctions';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import OrderCard from 'components/orderCard/OrderCard';
 
 const Orders = () => {
@@ -28,20 +28,19 @@ const Orders = () => {
     if(!user) {
       window.location.href = "/account/login";
     }
-    const orderList = user.orders;
-
-    await Promise.all(orderList.map(async (orderId) => {
+    const orderList = [...user.orders].reverse();
+    
+    const allOrders = await Promise.all(orderList.map(async (orderId) => {
       const url = `http://localhost:5000/order/get?orderId=${orderId}`;
       const response = await axios.get(url);
       let order = response.data;
       
       const productList = await getProducts(order.products);
       order.products = productList;
-
-      const updatedOrders = [...orders];
-      updatedOrders.push(order);
-      setOrders(updatedOrders);
+      return order;
     }));
+    setOrders(allOrders);
+    console.log(allOrders);
   }
 
   useEffect(() => {

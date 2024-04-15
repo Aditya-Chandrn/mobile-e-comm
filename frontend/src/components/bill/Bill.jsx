@@ -54,6 +54,7 @@ const Bill = ({ cart, setCart }) => {
     // store user in local storage
     storeUser(updatedUser)
     setUser(updatedUser);
+    window.location.href = "/orders";
   };
 
   useEffect(() => {

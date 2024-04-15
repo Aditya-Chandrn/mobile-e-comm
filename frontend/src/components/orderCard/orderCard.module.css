@@ -17,12 +17,9 @@
 }
 
 .image{
+  object-fit: contain;
   height: 5vw;
   width: 5vw;
-}
-
-.text{
-  
 }
 
 .name{

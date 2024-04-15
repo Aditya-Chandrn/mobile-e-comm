@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./sell.module.css";
 import axios from "axios";
 import { getUser } from "helperFunctions";
@@ -80,6 +80,12 @@ const Sell = () => {
 
     window.location.href = "/sell";
   };
+
+  useEffect(() => {
+    if(!getUser()) {
+      window.location.href = "/account/login";
+    }
+  }, [])
 
   return (
     <div className={styles["sell"]}>
