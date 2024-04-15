@@ -1,10 +1,14 @@
 import React from "react";
 import styles from "./navbar.module.css";
-import { Link } from "react-router-dom";
-import { getUser } from "helperFunctions";
+import { Link, redirect } from "react-router-dom";
+import { getUser, storeUser } from "helperFunctions";
 
 const Navbar = ({ children }) => {
   const user = getUser();
+
+  const signOut = () => {
+    window.location.href = "/account/login";
+  }
 
   return (
     <div className={styles["navbar"]}>
@@ -13,8 +17,8 @@ const Navbar = ({ children }) => {
         <Link to="/sell">Sell</Link>
         <Link to="/orders">Orders</Link>
         <Link to="/cart">Cart</Link>
-        <button type="button">
-          {user ? user.name : ""}
+        <button className={styles["user"]} type="button">
+          {user ? <div onClick={() => signOut()}>{user.name}</div> : <Link to="/account/login">Login</Link>}
         </button>
       </div>
       {children}

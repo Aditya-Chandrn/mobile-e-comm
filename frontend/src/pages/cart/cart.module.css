@@ -14,3 +14,13 @@
 .cost{
   width: 20vw;
 }
+
+.clear{
+  font-weight: 700;
+  font-size: 1.2em;
+  width: fit-content;
+  padding: 1vh 1vw;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}

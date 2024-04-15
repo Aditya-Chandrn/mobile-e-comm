@@ -26,6 +26,14 @@ const Cart = () => {
   const [ user, setUser ] = useState();
   const [cart, setCart] = useState();
 
+  // const clearCart = () => {
+  //   const url = "http://localhost:5000/user/edit";
+  //   const response = axios.post(url, {
+  //     userId: user.userId,
+  //     prodyc
+  //   })
+  // }
+
   const editCartItem = async (productId, increment) => {
     // find product in cart
     const cartItem = user.cart.find(
@@ -89,6 +97,7 @@ const Cart = () => {
         cart.map((cartItem, index) =>
           <CartItem key={index} cartItem={cartItem} editCartItem={editCartItem}/>
         )}
+        {/* <button className={styles["clear"]} type="button"onClick={() => clearCart()}>Clear Cart</button> */}
       </div>
       <Bill cart={cart} setCart={setCart}/>
     </div>

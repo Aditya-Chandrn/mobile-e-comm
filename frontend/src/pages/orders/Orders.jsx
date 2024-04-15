@@ -25,6 +25,9 @@ const Orders = () => {
   }
 
   const getOrders = async () => {
+    if(!user) {
+      window.location.href = "/account/login";
+    }
     const orderList = user.orders;
 
     await Promise.all(orderList.map(async (orderId) => {
